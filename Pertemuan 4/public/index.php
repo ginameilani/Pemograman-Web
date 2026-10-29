@@ -12,6 +12,8 @@ spl_autoload_register(function ($class) {
 
 // Fallback jika rewrite .htaccess tidak tersedia (PHP built-in server),
 // sekaligus menangani subfolder, mis. http://localhost/inventaris-mvc/public/. 
+// 
+
 if (!isset($_GET['url'])) {
     $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
     $basePath = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? ''));
@@ -21,5 +23,9 @@ if (!isset($_GET['url'])) {
     $_GET['url'] = trim((string) $uri, '/'); 
 }
 
-session_start(); 
+if (empty($_GET['url'])) {
+    $_GET['url'] = 'auth/login';
+}
+
+session_start();
 $app = new App();
